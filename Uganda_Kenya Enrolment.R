@@ -1,19 +1,15 @@
 library(data.table)
 library(tidyverse)# data manipulation
-library(learnr)#exports files from r to excel
-library(readr)#read csv files
 library(epiDisplay)#presents graphs and tables in horizontal
 library(plotrix)#plots 3D graphs
 library(ggpubr)# used to create graphs
 library(lubridate)# used to manipulate date
 library(RColorBrewer)
-library(writexl)
-library(readxl)
 library(forcats)
 library(patchwork)
 
 ### importing Enrollment data-----
-Enrolment <- read_csv('Data/TIST enrolment data072023v1.csv')#  NB: read_csv allows one to add arguments in code instead of read.csv e.g read_csv('TIST enrolment data072023.csv'),col_types=cols(Date_registered = col_date("%m/%d/%Y %H:%M") if I wanted to change date attributes of specific column from onset
+Enrolment <- read_csv('TIST enrolment data072023v1.csv')#  NB: read_csv allows one to add arguments in code instead of read.csv e.g read_csv('TIST enrolment data072023.csv'),col_types=cols(Date_registered = col_date("%m/%d/%Y %H:%M") if I wanted to change date attributes of specific column from onset
 
 ### making sure the values in the date registerd column are recognised as dates in R----
 Enrolment$Date<-mdy_hm(Enrolment$date_registered)
@@ -94,7 +90,9 @@ UG<-ggplot(Uganda_Enrolment_freq,
   scale_x_continuous(expand=c(0,0)) + scale_y_continuous(expand=c(0,0))+
   theme_bw()+
   theme(panel.grid.major=element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),axis.line = element_line('black'))
+
 UG
+ggsave(file="UG_enrolment.png", dpi=600)
 ##############################################################################################
 ###Kenya------
 
@@ -129,4 +127,6 @@ KE<-ggplot(Kenya_Enrolment_freq,
   scale_x_continuous(expand=c(0,0)) + scale_y_continuous(expand=c(0,0))+
   theme_bw()+
   theme(panel.grid.major=element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),axis.line = element_line('black'))
+
 KE
+ggsave(file="KE_enrolment.png",dpi=600)
