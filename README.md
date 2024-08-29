@@ -8,7 +8,7 @@ Contained here are two files:
 1. "TIST enrolment data072023v1.csv" TIST enrolment data accessed on 7 November 2023.
 2. "Uganda_Kenya Enrolment.R", the R Script used to generate the plot.
 
-The group names have been replaced with random numbers for data privacy.
+The group names in the .csv file have been replaced with random numbers for data privacy.
 
 [![DOI](https://zenodo.org/badge/835296733.svg)](https://zenodo.org/doi/10.5281/zenodo.13128843)
 
