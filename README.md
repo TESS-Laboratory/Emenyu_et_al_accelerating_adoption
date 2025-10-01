@@ -5,8 +5,9 @@ This repository contains the data and code used to generate Figure 2 in "Positiv
 The figure illustrates the differences in scaling patterns between project sites in Uganda and Kenya; demonstrating the highly contextual nature of scaling.
 
 Contained here are two files:
-1. "TIST enrolment data072023v1.csv" TIST enrolment data accessed on 7 November 2023.
+1. "UGKEenrolment.csv", Uganda_Kenya enrolment data processed from TIST enrolment data. The primary dataset was  accessed on 7 November 2023.
 2. "Uganda_Kenya Enrolment.R", the R Script used to generate the plot.
+3. "UG_KE_enrolment.png", image product from script included in the manuscript. 
 
 The group names in the .csv file have been replaced with random numbers for data privacy.
 
