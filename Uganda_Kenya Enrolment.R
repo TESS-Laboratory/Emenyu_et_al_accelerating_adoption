@@ -122,7 +122,6 @@ KE<-ggplot(Kenya_Enrolment_freq,
 
 
 KE
-# ggsave(file="KE_enrolment.png",dpi=600)
 #############################################################################
 # Combine Uganda and Kenya plots side by side
 UG_KE <- UG + KE +
