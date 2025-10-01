@@ -8,107 +8,89 @@ library(RColorBrewer)
 library(forcats)
 library(patchwork)
 
-### importing Enrollment data-----
+# importing Enrollment data-----
 Enrolment <- read_csv('UGKEenrolment.csv')#  NB: read_csv allows one to add arguments in code instead of read.csv e.g read_csv('TIST enrolment data072023.csv'),col_types=cols(Date_registered = col_date("%m/%d/%Y %H:%M") if I wanted to change date attributes of specific column from onset
 
-### making sure the values in the date registerd column are recognised as dates in R----
+# making sure the values in the date registerd column are recognised as dates in R----
 Enrolment$Date<-mdy_hm(Enrolment$date_registered)
 Enrolment$Year_Enroled<-year(Enrolment$Date)
 
-## Only filtered groups that planted trees----
+# Only filtered groups that planted trees----
 Enroled_Trees_Planted<-Enrolment%>%
   filter(Trees>=1)%>%#mutate used to create new columns based o existing column, function in dplyr
   filter(Year_Enroled < "2023")
-###Uganda----
+##Uganda----
 Uganda_Enrolment <- Enroled_Trees_Planted %>%
   filter(Country == "UG")
 
-### Enrolment stats----
+# Enrollment stats----
 Uganda_Enrolment_stats<-Uganda_Enrolment %>%
   group_by(Year_Enroled, Proj_Area)%>%
-  dplyr::reframe(
-    Groups<- sum(Groups)
-  )
+  dplyr::reframe(Groups<- sum(Groups))
 
 colnames(Uganda_Enrolment_stats) <- c("Year","Area","Groups")
 
 UG_Enrolment_stats2<-Uganda_Enrolment%>%
   group_by(Proj_Area)%>%
-  dplyr::reframe(
-    Group_sums<-sum(Groups)
-  )
+  dplyr::reframe(Group_sums<-sum(Groups))
 
 
 colnames(UG_Enrolment_stats2)<-c("Proj_Area","Groups")
 
-####Computing cummulative enrolment ----
+#Computing cumulative enrollment ----
 Uganda_Enrolment_freq<-Uganda_Enrolment_stats%>%
-  group_by(Area)%>%
-  dplyr::mutate(cs=cumsum(Groups))
+   dplyr::mutate(cs=cumsum(Groups))
  
 colnames(Uganda_Enrolment_freq)<- c("Year","Area","Groups","Total_Groups")
 
 Uganda_Enrolment_freq$Area<- factor(Uganda_Enrolment_freq$Area, levels=c("Lamwo","Kole","Kitgum","Hoima","Isingiro","Lira","Omoro", "Kayunga","Kyenjojo","Gulu","Kiryandongo","Soroti", "Amuru","Rukungiri", "Bushenyi","Kabale", "Kanungu"))
 UG_Enrolment_stats2$Proj_Area <-factor(UG_Enrolment_stats2$Proj_Area,levels=c("Kanungu","Kabale","Bushenyi","Rukungiri","Amuru","Soroti","Kiryandongo", "Gulu","Kyenjojo", "Kayunga","Omoro",  "Lira","Isingiro","Hoima","Kitgum","Kole","Lamwo"))
                                                                               
-##############################################################
 
-###########Bar plot---------
-#ggplot(UG_Enrolment_stats2, aes(x=Groups, y=reorder(Proj_Area, + Groups)), fill="black", width=0.3)+ ## line would Project area reorderd by Groups
-  UG_STATS<-ggplot(UG_Enrolment_stats2, aes(x=Groups, y=Proj_Area), fill="black", width=0.3)+
-  geom_col()+
-  theme_set(theme_light())  +
-  scale_x_continuous(
-    limits=c(0,980),
-    breaks=seq(0,980, by = 50),
-    expand=c(0,0),# Horizontal axis does not expand
-    position="top"
-  )+
-  scale_y_discrete(
-  expand=expansion(add=c(0,0.4))  
-  
-)+
-    theme_bw()+
-  theme(panel.grid.major=element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),axis.line = element_line('black'))
-UG_STATS
-
-############
-                                                                      
-######## creating a vector of colours from the various shades of qualitative pallets from RcolorBrewer t-----
+# creating a vector of colors from the various shades of qualitative pallets from RcolorBrewer t-----
 qual_col_pals=brewer.pal.info[brewer.pal.info$category=='qual',]
 col_vector=unlist(mapply(brewer.pal,qual_col_pals$maxcolors,rownames(qual_col_pals)))
 col_vector
 
-##stacked area plot-----
-UG<-ggplot(Uganda_Enrolment_freq,
-       aes(x=Year, 
-                      y=Total_Groups,
-                      fill=Area))+
-  geom_area(aes(colour=Area, fill=Area))+
-  theme_set(theme_light())  +
-  scale_fill_manual(values=col_vector)+
-  scale_x_continuous(expand=c(0,0)) + scale_y_continuous(expand=c(0,0))+
-  theme_bw()+
-  theme(panel.grid.major=element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),axis.line = element_line('black'))
+#stacked area plot-----
+UG <- ggplot(Uganda_Enrolment_freq,
+             aes(x = Year, 
+                 y = Total_Groups,
+                 fill = Area)) +
+  geom_area(aes(colour = Area, fill = Area)) +
+  scale_fill_manual(values = col_vector) +
+  scale_x_continuous(expand = c(0,0)) + 
+  scale_y_continuous(expand = c(0,0)) +
+  theme_light() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.line = element_line(color = "black"),
+    legend.position = "bottom",
+    axis.text = element_text(size = 14),      # axis tick labels
+    axis.title = element_text(size = 16),     # axis titles
+    legend.text = element_text(size = 12),    # legend labels
+    legend.title = element_text(size = 14)    # legend title
+  )
+
 
 UG
-ggsave(file="UG_enrolment.png", dpi=600)
 ##############################################################################################
-###Kenya------
+##Kenya------
 
 Kenya_Enrolment <- Enroled_Trees_Planted %>%
   filter(Country == "KE")
 
-### Enrolment stats----
+# Enrollment stats----
 Kenya_Enrolment_stats<-Kenya_Enrolment%>%
   group_by(Year_Enroled, Proj_Area)%>%
-  dplyr::reframe(
-    Groups<- sum(Groups)
-  )
+  dplyr::reframe(Groups<- sum(Groups))
 
 colnames(Kenya_Enrolment_stats) <- c("Year","Area","Groups")
 
-####Computing cummulative enrolment ----
+#Computing cumulative enrolment ----
 Kenya_Enrolment_freq<-Kenya_Enrolment_stats%>%
   group_by(Area)%>%
   dplyr::mutate(cs=cumsum(Groups))
@@ -116,7 +98,7 @@ Kenya_Enrolment_freq<-Kenya_Enrolment_stats%>%
 colnames(Kenya_Enrolment_freq)<- c("Year","Area","Groups","Total_Groups")
 
 Kenya_Enrolment_freq$Area<- factor(Kenya_Enrolment_freq$Area, levels=c("Muranga","Machakos","Nyamira","Trans-Nzoia","Embu","Mara","Meru","Nanyuki"))
-##stacked area plot-----
+#stacked area plot-----
 KE<-ggplot(Kenya_Enrolment_freq,
        aes(x=Year, 
            y=Total_Groups,
@@ -126,7 +108,36 @@ KE<-ggplot(Kenya_Enrolment_freq,
   scale_fill_manual(values=col_vector)+
   scale_x_continuous(expand=c(0,0)) + scale_y_continuous(expand=c(0,0))+
   theme_bw()+
-  theme(panel.grid.major=element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),axis.line = element_line('black'))
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.line = element_line(color = "black"),
+    legend.position = "bottom",
+    axis.text = element_text(size = 14),      # axis tick labels
+    axis.title = element_text(size = 16),     # axis titles
+    legend.text = element_text(size = 12),    # legend labels
+    legend.title = element_text(size = 14)    # legend title
+  )
+
 
 KE
-ggsave(file="KE_enrolment.png",dpi=600)
+# ggsave(file="KE_enrolment.png",dpi=600)
+#############################################################################
+# Combine Uganda and Kenya plots side by side
+UG_KE <- UG + KE +
+  plot_layout(ncol = 2) +
+  plot_annotation(
+    tag_levels = "a",          # sequential letters
+    tag_prefix = "(",          # add opening bracket
+    tag_suffix = ")"           # add closing bracket
+  ) & 
+  theme(
+    plot.tag = element_text(size = 16, face = "bold"),
+    plot.tag.position = "top"  # put labels above the plots
+  )
+
+UG_KE
+
+# Save combined plot
+ggsave("UG_KE_enrolment.png", UG_KE, dpi = 600, width = 12, height = 6)
