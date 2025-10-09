@@ -73,10 +73,10 @@ UG<-ggplot(Uganda_Enrolment_freq,
     panel.border = element_blank(),
     axis.line = element_line(color = "black"),
     legend.position = "bottom",
-    axis.text = element_text(size = 14),      # axis tick labels
-    axis.title = element_text(size = 16),     # axis titles
+    axis.text = element_text(size = 12),      # axis tick labels
+    axis.title = element_text(size = 13),     # axis titles
     legend.text = element_text(size = 12),    # legend labels
-    legend.title = element_text(size = 14)    # legend title
+    legend.title = element_text(size = 12)    # legend title
   )
 
 
@@ -120,10 +120,10 @@ KE<-ggplot(Kenya_Enrolment_freq,
     panel.border = element_blank(),
     axis.line = element_line(color = "black"),
     legend.position = "bottom",
-    axis.text = element_text(size = 14),      # axis tick labels
-    axis.title = element_text(size = 16),     # axis titles
+    axis.text = element_text(size = 12),      # axis tick labels
+    axis.title = element_text(size = 13),     # axis titles
     legend.text = element_text(size = 12),    # legend labels
-    legend.title = element_text(size = 14)    # legend title
+    legend.title = element_text(size = 12)    # legend title
   )
 
 
